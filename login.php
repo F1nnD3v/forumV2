@@ -1,10 +1,15 @@
+<?php
+  include 'connect.php';
+  error_reporting(0);
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Forum - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-zinc-900">
@@ -18,12 +23,12 @@
       <input type="hidden" name="remember" value="true">
       <div class="rounded-md shadow-sm -space-y-px">
         <div>
-          <label for="email-address" class="sr-only" autocomplete="off">Email address</label>
-          <input id="email-address" name="email" type="email" autocomplete="email" required class="bg-transparent appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address">
+          <label for="email-address" class="sr-only">Email address or Username</label>
+          <input id="email-address" name="user" type="text" autocomplete="email" required class="bg-transparent appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-stone-50 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address">
         </div>
         <div>
           <label for="password" class="sr-only">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 bg-transparent placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+          <input id="password" name="psw" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 bg-transparent placeholder-gray-500 text-stone-50 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
         </div>
       </div>
 
@@ -39,7 +44,7 @@
       </div>
 
       <div>
-        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-900 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <button name="submit" type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-900 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <span class="absolute left-0 inset-y-0 flex items-center pl-3">
             <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
@@ -53,3 +58,33 @@
 </div>
 </body>
 </html>
+
+<?php
+    if(isset($_POST["submit"])){
+        $user = $_POST['user'];
+        $pass = md5($_POST['psw']);
+        if(empty($user) || empty($pass)){
+            $erro = "Todos os campos devem ser preenchidos.";
+            echo "<br><span class='erro' style='margin-top: 20px;'>$erro</span>";
+            return;
+        }
+         $sql = "SELECT * FROM `users` WHERE utilizador='$user' OR email='$user' AND password = '$pass' LIMIT 1";
+            $result = mysqli_query($conn, $sql);
+            if(mysqli_num_rows($result) > 0){
+                $row = mysqli_fetch_assoc($result);
+                if($user == $row['utilizador'] && $pass == $row['password'])
+                $_SESSION['idUser'] = $row['id'];
+                $_SESSION['user'] = $row['utilizador'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['admin'] = $row['admin'];
+                $_SESSION['xp'] = $row['xp'];
+                $_SESSION['lvl'] = $row['lvl'];
+                $_SESSION['coins'] = $row['coins'];
+                header('Location: welcome.php');
+            }else{
+                $erro = "Utilizador ou palavra-passe incorreto/a.";
+                echo "<br><span class='erro' style='margin-top: 20px;'>$erro</span>";
+                return;
+            }
+    }
+?>
