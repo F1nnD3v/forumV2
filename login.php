@@ -1,7 +1,17 @@
 <?php
   include 'connect.php';
-  error_reporting(0);
   session_start();
+  if(isset($_COOKIE['login_session_key'])){
+    $login_session_key = $_COOKIE['login_session_key'];
+    $sql = "SELECT * FROM `users` WHERE login_session_key='$login_session_key'";
+    $result = mysqli_query($conn, $sql);
+    if($result){
+      $row = mysqli_fetch_assoc($result);
+      $_SESSION['userId'] = $row['id'];
+      $_SESSION['admin'] = $row['admin'];
+      header('Location: welcome.php');
+    }
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,12 +29,12 @@
       <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow">
       <h2 class="mt-6 text-center text-3xl font-extrabold text-stone-50">Login</h2>
     </div>
-    <form class="mt-8 space-y-6" action="#" method="POST">
+    <form class="mt-8 space-y-6" method="POST">
       <input type="hidden" name="remember" value="true">
       <div class="rounded-md shadow-sm -space-y-px">
         <div>
           <label for="email-address" class="sr-only">Email address or Username</label>
-          <input id="email-address" name="user" type="text" autocomplete="email" required class="bg-transparent appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-stone-50 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address">
+          <input id="email-address" name="user" type="text" autocomplete="email" required class="bg-transparent appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-stone-50 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address or Username">
         </div>
         <div>
           <label for="password" class="sr-only">Password</label>
@@ -34,7 +44,7 @@
 
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+          <input id="rememberme" name="rememberme" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
           <label for="remember-me" class="ml-2 block text-sm text-stone-50"> Remember me </label>
         </div>
 
@@ -68,18 +78,32 @@
             echo "<br><span class='erro' style='margin-top: 20px;'>$erro</span>";
             return;
         }
-         $sql = "SELECT * FROM `users` WHERE utilizador='$user' OR email='$user' AND password = '$pass' LIMIT 1";
+         $sql = "SELECT * FROM `users` WHERE user='$user' OR email='$user' AND pass ='$pass' LIMIT 1";
             $result = mysqli_query($conn, $sql);
             if(mysqli_num_rows($result) > 0){
                 $row = mysqli_fetch_assoc($result);
-                if($user == $row['utilizador'] && $pass == $row['password'])
-                $_SESSION['idUser'] = $row['id'];
-                $_SESSION['user'] = $row['utilizador'];
-                $_SESSION['email'] = $row['email'];
+                if($user == $row['user'] && $pass == $row['pass'])
+                $_SESSION['userId'] = $row['id'];
                 $_SESSION['admin'] = $row['admin'];
-                $_SESSION['xp'] = $row['xp'];
-                $_SESSION['lvl'] = $row['lvl'];
-                $_SESSION['coins'] = $row['coins'];
+                if($_POST['rememberme'] == true){
+                  $key = '';
+                  $array = array('A','B','C','D','E','F','G','H','I','K','L','M','N','O','P','Q','R','S','T','V','X','Y','Z','1','2','3','4','5','6','7','8','9','0');
+                  for($i = 0; $i < 30; $i++){
+                      $key .= $array[rand(0, count($array))];
+                  }
+                  $sql = "SELECT * FROM `users` WHERE login_session_key='$key'";
+                  $result = mysqli_query($conn, $sql);
+                  if($result){
+                    $key = '';
+                    $array = array('A','B','C','D','E','F','G','H','I','K','L','M','N','O','P','Q','R','S','T','V','X','Y','Z','1','2','3','4','5','6','7','8','9','0');
+                    for($i = 0; $i < 30; $i++){
+                        $key .= $array[rand(0, count($array))];
+                    }
+                  }
+                  $sql = "UPDATE `users` SET login_session_key='$key' WHERE user='$user'";
+                  $result = mysqli_query($conn, $sql);
+                  setcookie('login_session_key',$key,time() + (86400 * 3));
+                }
                 header('Location: welcome.php');
             }else{
                 $erro = "Utilizador ou palavra-passe incorreto/a.";
