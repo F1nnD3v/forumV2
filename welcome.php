@@ -47,13 +47,17 @@ if($result){
     </div>
     <div class="sugestões">
         <?php
-            $sql = "select id,nickname from `users` order by rand(count(id)) where id!='. $userId .' and id!=(select pessoa where id='. $userId .') limit 5";
+            $sql = "select id,nickname from `users` where id!='. $userId .' order by rand() limit 5";
             $result = mysqli_query($conn, $sql);
             if($result){
                 while($row = mysqli_fetch_array($result)){
                     $nickSug = $row['nickname'];
                     $idSug = $row['id'];
-                    echo '<b><a href="profile.php?userId=' . $idSug . '">' . $nickSug . '</a></b><a href="follow.php"><input class="btnSubmit" type="submit" value="Seguir"></a>';
+                   // $sql = "SELECT * FROM `seguidores` where pessoa='".$userId."' and seguiu='".$idSug."'";
+                   // $result = mysqli_query($conn, $sql);
+                   // if (!$result){
+                        echo '<br<b><a href="profile.php?userId=' . $idSug . '">' . $nickSug . '</a></b><a href="follow.php?followId='.$idSug.'"><input style="margin-left: 1rem;" class="btnSubmit" type="submit" value="Seguir"></a><br>';
+                    //}
                 }
             }else{
                 echo 'Something went wrong!';

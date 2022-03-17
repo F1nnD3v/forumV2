@@ -5,13 +5,22 @@
     header('Location: login.php');
   }
     $userId = $_SESSION['userId'];
+    $profileId = $_GET['userId'];
+
     $sql = "SELECT nickname FROM `users` WHERE id='$userId'";
     $result = mysqli_query($conn, $sql);
     if($result){
       $row = mysqli_fetch_assoc($result);
       $nickname = $row['nickname'];
-      echo '<script>
-                document.title = "Perfil de ' . $nickname . '"
+    }
+
+    $sql = "SELECT nickname FROM `users` WHERE id='$profileId'";
+    $result = mysqli_query($conn,$sql);
+    if($result){
+        $row = mysqli_fetch_assoc($result);
+        $profileNickname = $row['nickname'];
+        echo '<script>
+                document.title = "Perfil de ' . $profileNickname . '"; 
             </script>';
     }
 
@@ -47,13 +56,13 @@
             </div>
             <div style="margin-top:0.5rem; text-align: center; margin-top: 1.5rem" class="nomePerfil">
                 <?php
-                echo '<h2 class="navbarNickname">' . $nickname . '</h2>';
+                echo '<h2 class="navbarNickname">' . $profileNickname . '</h2>';
                 if($_SESSION['userId'] == $_GET['userId']){
                     echo '<a href="welcome.php">
                         <input class="btnSubmit" type="submit" value="Editar perfil">
                       </a>';
                 }else{
-                    $profileId = $_GET['userId'];
+
                     echo '<a href="seguir.php?seguiu=' . $profileId . '">
                             <input class="btnSubmit" type="submit" value="Seguir"/>
                           </a>';
