@@ -10,7 +10,7 @@ $result = mysqli_query($conn,$sql);
 if(!$result){
     echo 'Something went wrong!';
 }else{
-    $sql = "INSERT INTO `seguidores`(pessoa,seguiu) values($followId, $followerId)";
+    $sql = "INSERT INTO `seguidores`(pessoa,seguiu) values($followerId, $followId)";
     $result = mysqli_query($conn, $sql);
     if(!$result){
         echo 'Something went wrong!';

@@ -39,63 +39,61 @@ if($result){
 </div>
 
 <div class="body">
-    <div class="xx">
-
-    </div>
-    <div class="posts">
-
-    </div>
-    <div class="sugestões">
+    <div style="margin-left: 3rem;" class="sugestoes">
         <?php
-            $sql = "select id,nickname from `users` where id!='. $userId .' order by rand() limit 5";
-            $result = mysqli_query($conn, $sql);
-            if($result){
-                while($row = mysqli_fetch_array($result)){
-                    $nickSug = $row['nickname'];
-                    $idSug = $row['id'];
-                   // $sql = "SELECT * FROM `seguidores` where pessoa='".$userId."' and seguiu='".$idSug."'";
-                   // $result = mysqli_query($conn, $sql);
-                   // if (!$result){
-                        echo '<br<b><a href="profile.php?userId=' . $idSug . '">' . $nickSug . '</a></b><a href="follow.php?followId='.$idSug.'"><input style="margin-left: 1rem;" class="btnSubmit" type="submit" value="Seguir"></a><br>';
-                    //}
-                }
-            }else{
-                echo 'Something went wrong!';
-            }
-        ?>
-    </div>
-</div>
-<div class="dropdowns">
-    <div id="notifications" class="dropdownNotifications" style="visibility: hidden;">
-        <?php
-        $sql = "select * from `notifications` where usernotificado='" . $_SESSION['userId'] . "'";
+        $sql = "SELECT users.id, users.nickname, seguidores.pessoa FROM seguidores LEFT JOIN users ON users.id = seguidores.seguiu WHERE seguidores.pessoa != 4  order by rand() limit 5";
         $result = mysqli_query($conn, $sql);
         if($result){
-            $idSess = $_SESSION['userId'];
-            $sql1 = "SELECT notifications.idNoti, users.utilizador, notifications.notificou, actions.Action, notifications.idAction, users.id FROM ((notifications INNER JOIN users ON notifications.notificou = users.id) INNER JOIN actions ON notifications.idAction = actions.idAction) WHERE notifications.userNotificado ='$idSess'";
-            $result1 = mysqli_query($conn, $sql1);
-            if($result1) {
-                while ($row = mysqli_fetch_array($result1)) {
-                    $utilizador = $row['utilizador'];
-                    $acao = $row['Action'];
-                    if ($acao == 'Começou_a_seguir') {
-                        echo $utilizador . 'começou a seguir te';
-                    }
+            if(mysqli_fetch_assoc($result) <= 0){
+                echo 'You already follow everybody!';
+            }
+            while($row = mysqli_fetch_assoc($result)){
+                $nickSug = $row['nickname'];
+                $idSug = $row['id'];
+                if($userId != $idSug){
+                    echo '<div class="sugestao"><b><a href="profile.php?userId=' . $idSug . '">' . $nickSug . '</a></b><a href="follow.php?followId='.$idSug.'"><input style="margin-left: 1rem;" class="btnSubmit" type="submit" value="Seguir"></a></div>';
                 }
             }
         }else{
-            echo '<b>Não existem notificações disponíveis</b> ';
+            echo 'Something went wrong!';
         }
         ?>
     </div>
-    <div id="dropdown" class="dropdownPerfil" style="visibility: hidden;">
-        <ul style="list-style-type: none;">
-            <li><a href="<?php echo 'profile.php?userId=' . $_SESSION['userId'] ?>">Perfil</a></li>
-            <div class="separador"></div>
-            <li><a href="<?php echo 'settings.php'?>">Settings</a></li>
-            <div class="separador"></div>
-            <li><a href="logout.php">Log out</a></li>
-        </ul>
+    <div class="posts">
+    sbdauiavusuv
+    </div>
+    <div style="margin-top: -1rem" class="dropdowns">
+        <div id="notifications" class="dropdownNotifications" style="visibility: hidden;">
+            <?php
+            $sql = "select * from `notifications` where usernotificado='" . $_SESSION['userId'] . "'";
+            $result = mysqli_query($conn, $sql);
+            if($result){
+                $idSess = $_SESSION['userId'];
+                $sql1 = "SELECT notifications.idNoti, users.utilizador, notifications.notificou, actions.Action, notifications.idAction, users.id FROM ((notifications INNER JOIN users ON notifications.notificou = users.id) INNER JOIN actions ON notifications.idAction = actions.idAction) WHERE notifications.userNotificado ='$idSess'";
+                $result1 = mysqli_query($conn, $sql1);
+                if($result1) {
+                    while ($row = mysqli_fetch_array($result1)) {
+                        $utilizador = $row['utilizador'];
+                        $acao = $row['Action'];
+                        if ($acao == 'Começou_a_seguir') {
+                            echo $utilizador . 'começou a seguir te';
+                        }
+                    }
+                }
+            }else{
+                echo '<b>Não existem notificações disponíveis</b> ';
+            }
+            ?>
+        </div>
+        <div id="dropdown" class="dropdownPerfil" style="visibility: hidden;">
+            <ul style="list-style-type: none;">
+                <li><a href="<?php echo 'profile.php?userId=' . $_SESSION['userId'] ?>">Perfil</a></li>
+                <div class="separador"></div>
+                <li><a href="<?php echo 'settings.php'?>">Settings</a></li>
+                <div class="separador"></div>
+                <li><a href="logout.php">Log out</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 </body>
