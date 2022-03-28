@@ -127,7 +127,6 @@ div.body{
 }
 
 .posts{
-    border: 1px gray solid;
     width: 100%;
     height: 10rem;
     margin-left: 3rem;
@@ -143,4 +142,36 @@ div.sugestoes{
 div.sugestao{
     display: flex;
     justify-content: space-between;
+}
+
+div.cardPost{
+    width: 100%;
+    margin-left: 3rem;
+    border-radius: .5rem;
+    background-color: gray;
+    min-width: 30rem;
+    padding-bottom: 1rem;
+}
+div.userPost{
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 1rem;
+}
+
+div.userPost svg{
+    margin-top: 1rem;
+}
+
+div.userPost a{
+    text-decoration: none;
+    color: black;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+div.contentPost{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 6rem;
+    margin-top: -1rem;
 }

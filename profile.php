@@ -57,13 +57,16 @@
             <div style="margin-top:0.5rem; text-align: center; margin-top: 1.5rem" class="nomePerfil">
                 <?php
                 echo '<h2 class="navbarNickname">' . $profileNickname . '</h2>';
+
+                $sql = "SELECT "
+
                 if($_SESSION['userId'] == $_GET['userId']){
                     echo '<a href="welcome.php">
                         <input class="btnSubmit" type="submit" value="Editar perfil">
                       </a>';
                 }else{
 
-                    echo '<a href="seguir.php?seguiu=' . $profileId . '">
+                    echo '<a href="follow.php?followId=' . $profileId . '">
                             <input class="btnSubmit" type="submit" value="Seguir"/>
                           </a>';
                 }

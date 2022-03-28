@@ -41,26 +41,56 @@ if($result){
 <div class="body">
     <div style="margin-left: 3rem;" class="sugestoes">
         <?php
-        $sql = "SELECT users.id, users.nickname, seguidores.pessoa FROM seguidores LEFT JOIN users ON users.id = seguidores.seguiu WHERE seguidores.pessoa != 4  order by rand() limit 5";
+        $sql = "SELECT * FROM `users` WHERE id NOT IN (SELECT seguiu FROM `seguidores` WHERE pessoa='$userId') AND id!='$userId'";
         $result = mysqli_query($conn, $sql);
         if($result){
-            if(mysqli_fetch_assoc($result) <= 0){
-                echo 'You already follow everybody!';
-            }
             while($row = mysqli_fetch_assoc($result)){
-                $nickSug = $row['nickname'];
                 $idSug = $row['id'];
-                if($userId != $idSug){
-                    echo '<div class="sugestao"><b><a href="profile.php?userId=' . $idSug . '">' . $nickSug . '</a></b><a href="follow.php?followId='.$idSug.'"><input style="margin-left: 1rem;" class="btnSubmit" type="submit" value="Seguir"></a></div>';
-                }
+                $nicknameSug = $row['nickname'];
+                echo '<div class="sugestao">';
+                echo '<a href="profile.php?userId=' . $idSug . '">';
+                echo '<p>' . $nicknameSug . '</p>';
+                echo '</a>';
+                echo '<a href="follow.php?followId='.$idSug.'"><input style="margin-left: 1rem;" class="btnSubmit" type="submit" value="Seguir"></a>';
+                echo '</div>';
             }
         }else{
             echo 'Something went wrong!';
         }
+
         ?>
     </div>
     <div class="posts">
-    sbdauiavusuv
+        <?php
+        $sql = "SELECT * FROM `posts` WHERE user='$userId' OR user IN (SELECT seguiu FROM `seguidores` WHERE pessoa='$userId') ORDER BY idPost DESC";
+
+        $result = mysqli_query($conn,$sql);
+
+        if (!$result){
+            echo "<h1>Não tens nada para ver :(</h1>";
+        }else{
+            while ($row = mysqli_fetch_array($result)){
+                $id = $row['user'];
+                $sql1 = "SELECT nickname from `users` WHERE id='$id'";
+                $result1 = mysqli_query($conn, $sql1);
+                if($result1){
+                    $row1 = mysqli_fetch_assoc($result1);
+                    $nickUser = $row1['nickname'];
+                    $userIdPost = $row['user'];
+                    $conteudo = $row['conteudo'];
+                    echo '<div class="cardPost">
+                            <div class="userPost">
+                                <svg width="4rem" onclick="hideDropdown()" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve"><g><g><path d="M229.5,0C102.53,0,0,102.845,0,229.5C0,356.301,102.719,459,229.5,459C356.851,459,459,355.815,459,229.5 C459,102.547,356.079,0,229.5,0z M347.601,364.67C314.887,393.338,273.4,409,229.5,409c-43.892,0-85.372-15.657-118.083-44.314 c-4.425-3.876-6.425-9.834-5.245-15.597c11.3-55.195,46.457-98.725,91.209-113.047C174.028,222.218,158,193.817,158,161c0-46.392,32.012-84,71.5-84c39.488,0,71.5,37.608,71.5,84c0,32.812-16.023,61.209-39.369,75.035c44.751,14.319,79.909,57.848,91.213,113.038C354.023,354.828,352.019,360.798,347.601,364.67z"/></g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+                                <a href="profile.php?userId='.$userIdPost.'">'.$nickUser.'</a>
+                            </div>
+                            <div class="contentPost">
+                                '.$conteudo.'
+                            </div>
+                        </div>';
+                }
+            }
+        }
+        ?>
     </div>
     <div style="margin-top: -1rem" class="dropdowns">
         <div id="notifications" class="dropdownNotifications" style="visibility: hidden;">
