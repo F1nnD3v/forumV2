@@ -44,7 +44,7 @@ if($result){
         $sql = "SELECT * FROM `users` WHERE id NOT IN (SELECT seguiu FROM `seguidores` WHERE pessoa='$userId') AND id!='$userId'";
         $result = mysqli_query($conn, $sql);
         if($result){
-            while($row = mysqli_fetch_assoc($result)){
+            while($row = mysqli_fetch_array($result)){
                 $idSug = $row['id'];
                 $nicknameSug = $row['nickname'];
                 echo '<div class="sugestao">';
@@ -61,6 +61,12 @@ if($result){
         ?>
     </div>
     <div class="posts">
+        <div class="newPost">
+            <form method="post" action="">
+                <input class="input" name="newPostContent" type="text" placeholder="Novo post">
+                <input class="btnSubmit" name="submit" type="submit">
+            </form>
+        </div>
         <?php
         $sql = "SELECT * FROM `posts` WHERE user='$userId' OR user IN (SELECT seguiu FROM `seguidores` WHERE pessoa='$userId') ORDER BY idPost DESC";
 

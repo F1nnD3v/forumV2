@@ -137,11 +137,18 @@ div.sugestoes{
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    margin-top: 1rem;
+    border-radius: .5rem;
+    background-color: gray;
+    width: 60rem;
 }
 
 div.sugestao{
     display: flex;
     justify-content: space-between;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 div.cardPost{
@@ -174,4 +181,22 @@ div.contentPost{
     justify-content: space-between;
     margin-left: 6rem;
     margin-top: -1rem;
+}
+
+div.newPost{
+    display: block;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+div.newPost input.input{
+    width: 100%;
+    border: 1px solid gray;
+    border-radius: .5rem;
+    padding: .5rem;
+    margin-top: 1rem;
+}
+
+div.newPost input{
+    display: inline!important;
 }

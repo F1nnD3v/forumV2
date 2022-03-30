@@ -12,6 +12,8 @@
     if($result){
       $row = mysqli_fetch_assoc($result);
       $nickname = $row['nickname'];
+    }else if(!$result){
+      header('Location: welcome.php');
     }
 
     $sql = "SELECT nickname FROM `users` WHERE id='$profileId'";
@@ -19,9 +21,14 @@
     if($result){
         $row = mysqli_fetch_assoc($result);
         $profileNickname = $row['nickname'];
+        if($profileNickname == null){
+            header('Location: welcome.php');
+        }
         echo '<script>
                 document.title = "Perfil de ' . $profileNickname . '"; 
             </script>';
+    }else if (!$result){
+        header('Location: welcome.php');
     }
 
 ?>
@@ -57,31 +64,59 @@
             <div style="margin-top:0.5rem; text-align: center; margin-top: 1.5rem" class="nomePerfil">
                 <?php
                 echo '<h2 class="navbarNickname">' . $profileNickname . '</h2>';
-
-                $sql = "SELECT "
+                $sql = "SELECT * FROM seguidores WHERE pessoa = '$userId' AND seguiu = '$profileId'";
+                $result = mysqli_query($conn,$sql);
 
                 if($_SESSION['userId'] == $_GET['userId']){
                     echo '<a href="welcome.php">
                         <input class="btnSubmit" type="submit" value="Editar perfil">
                       </a>';
-                }else{
-
+                }else if(!$result){
                     echo '<a href="follow.php?followId=' . $profileId . '">
                             <input class="btnSubmit" type="submit" value="Seguir"/>
+                          </a>';
+                }else{
+                    echo '<a href="unfollow.php?unfollowId=' . $profileId . '">
+                            <input class="btnSubmit" style="background-color: gray" type="submit" value="Deixar de seguir"/>
                           </a>';
                 }
                 ?>
             </div>
             <p style="margin-top: 1rem">Descrição do utilizador</p>
-            <p>0 seguidores</p>
-            <p>0 a seguir</p>
+            <?php
+            //contar todos os seguidores do utilizador
+            $sql = "SELECT COUNT(*) AS total FROM seguidores WHERE seguiu = '$profileId'";
+            $result = mysqli_query($conn,$sql);
+            $row = mysqli_fetch_assoc($result);
+            $totalFollowers = $row['total'];
+            echo '<p style="margin-top: 0.5rem">' . $totalFollowers . ' seguidores</p>';
+
+            //contar todos as pessoas que o utilizador segue
+            $sql = "SELECT COUNT(*) AS total FROM seguidores WHERE pessoa = '$profileId'";
+            $result = mysqli_query($conn,$sql);
+            $row = mysqli_fetch_assoc($result);
+            $totalFollowing = $row['total'];
+            echo '<p style="margin-top: 0.5rem">' . $totalFollowing . ' seguindo</p>';
+            ?>
             <p style="margin-bottom: 1rem; margin-top: 1rem"><b>Titulos</b></p>
             <div class="titulos">
-                <p id="tituloAdmin">Admin</p>
-                <p id="tituloVip">V.I.P</p>
+                <?php
+                //mostrar os titulos do utilizador
+                $sql = "SELECT * FROM titulos WHERE user = '$profileId'";
+                $result = mysqli_query($conn,$sql);
+                while($row = mysqli_fetch_assoc($result)){
+                    $titulo = $row['titulo'];
+                    if($titulo == "admin"){
+                        echo '<p id="tituloAdmin">Admin</p>';
+                    }else if($titulo == vip){
+                        echo '<p id="tituloVip">' . $titulo . '</p>';
+                    }
+                }
+                ?>
                 <p id="tituloMembro">Membro</p>
             </div>
         </div>
+
         <div class="dropdowns">
             <div id="notifications" class="dropdownNotifications" style="visibility: hidden;">
                 <?php
