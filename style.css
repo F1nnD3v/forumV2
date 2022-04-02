@@ -200,3 +200,11 @@ div.newPost input.input{
 div.newPost input{
     display: inline!important;
 }
+
+div.settings{
+    border-radius: 1rem;
+    border: 1px solid gray;
+    width: 50rem;
+    height: 50rem;
+    margin: auto;
+}

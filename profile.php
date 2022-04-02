@@ -2,8 +2,8 @@
     include 'connect.php';
     session_start();
     if(!isset($_COOKIE['login_session_key']) && !isset($_SESSION['userId'])){
-    header('Location: login.php');
-  }
+        header('Location: login.php');
+    }
     $userId = $_SESSION['userId'];
     $profileId = $_GET['userId'];
 
@@ -109,7 +109,7 @@
                     if($titulo == "admin"){
                         echo '<p id="tituloAdmin">Admin</p>';
                     }else if($titulo == vip){
-                        echo '<p id="tituloVip">' . $titulo . '</p>';
+                        echo '<p id="tituloVip">V.I.P</p>';
                     }
                 }
                 ?>
