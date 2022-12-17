@@ -208,3 +208,34 @@ div.settings{
     height: 50rem;
     margin: auto;
 }
+
+.followsModal{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    box-shadow: gray 1px 1px 15px 1px;
+    border-radius:1rem;
+    width: 20rem;
+}
+
+.followsModalContent{
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius:1rem;
+    width: 20rem;
+}
+
+.followsModalContentHeader{
+    display: flex;
+    justify-content: space-between;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1rem;
+    border-radius:1rem;
+    width: 20rem;
+    border-bottom: black 1px solid;
+    border-radius: 0;
+}

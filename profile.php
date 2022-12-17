@@ -117,6 +117,36 @@
             </div>
         </div>
 
+        <div class="followsModal">
+            <div class="followsModalContent">
+                <div class="followsModalContentHeader">
+                    <p>Seguindo</p>
+                </div>
+                <div class="followsModalContentBody">
+                    <?php
+                    $sql = "SELECT * FROM `seguidores` WHERE pessoa='$profileId'";
+                    $result = mysqli_query($conn, $sql);
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $followingId = $row['seguiu'];
+                        $sql = "SELECT * FROM `users` WHERE id='$followingId'";
+                        $result2 = mysqli_query($conn, $sql);
+                        $row2 = mysqli_fetch_assoc($result2);
+                        $nickname = $row2['nickname'];
+                        echo '<div class="followsModalContentBodyUser">';
+                        echo '<a href="profile.php?userId=' . $followingId . '">';
+                        echo '<div class="followsModalContentBodyUserProfilePicture">';
+                        echo '</div>';
+                        echo '<div class="followsModalContentBodyUserNickname">';
+                        echo '<p>' . $nickname . '</p>';
+                        echo '</div>';
+                        echo '</a>';
+                        echo '</div>';
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
         <div class="dropdowns">
             <div id="notifications" class="dropdownNotifications" style="visibility: hidden;">
                 <?php

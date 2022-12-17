@@ -56,43 +56,11 @@
                 </div>
                 <div class="dropdownNotificationsContentBody">
                     <?php
+                    //user notifications
                     $sql = "SELECT * FROM `notifications` WHERE userId='$userId' ORDER BY id DESC";
                     $result = mysqli_query($conn, $sql);
 
-                    if ($result) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $notificationId = $row['id'];
-                            $notificationType = $row['type'];
-                            $notificationUserId = $row['userId'];
-                            $notificationUserId2 = $row['userId2'];
-                            $notificationPostId = $row['postId'];
-                            $notificationPostId2 = $row['postId2'];
-                            $notificationCommentId = $row['commentId'];
-                            $notificationCommentId2 = $row['commentId2'];
-                            $notificationDate = $row['date'];
-                            $notificationSeen = $row['seen'];
-
-                            if ($notificationType == "like") {
-                                $sql = "SELECT * FROM `posts` WHERE id='$notificationPostId'";
-                                $result2 = mysqli_query($conn, $sql);
-
-                                if ($result2) {
-                                    $row2 = mysqli_fetch_assoc($result2);
-                                    $postUserId = $row2['userId'];
-                                    $postText = $row2['text'];
-                                    $postDate = $row2['date'];
-                                    $postLikes = $row2['likes'];
-                                    $postDislikes = $row2['dislikes'];
-                                    $postComments = $row2['comments'];
-                                    $postShares = $row2['shares'];
-                                    $postImage = $row2['image'];
-                                    $postVideo = $row2['video'];
-                                    $postLink = $row2['link'];
-                                    $postPrivacy = $row2['privacy'];
-                                    $postType = $row2['type'];
-                                    $postUserId2 = $row2['userId2'];
-                                    $postUserId3 = $row2['userId3'];
-                                    $postUserId4 = $row2['userId4'];
+                    
                     ?>
                 </div>
             </div>
